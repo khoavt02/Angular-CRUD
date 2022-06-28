@@ -1,0 +1,115 @@
+<nav class="navbar navbar-light bg-primary">
+  <div class="container-fluid">
+      <h1 style="color: aliceblue; font-weight: 700;" class="navbar-brand">Angular Demo</h1>
+      <div class="d-flex">
+        <div class="user-login">
+          <i class="fa-solid fa-circle-user"></i>
+          {{userNameLogin}}
+        </div>
+        <a routerLink="/"> <button class="btn btn-danger" (click)="clickLogout()">Logout</button></a>
+
+        <!-- <button routerLink="/signup" class="btn btn-success">Sign up</button> -->
+      </div>
+      <input type="text" class="form-control input-text" placeholder="Search ...." [(ngModel)]="data">
+  </div>
+</nav>
+
+<table class="table mt-3">
+  <thead>
+      <button type="button" id="add-btn" class="btn btn-success" (click)="clickAddEmployee()" data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
+
+      <tr>
+          <th class="col-md-1" scope="col">ID</th>
+          <th class="col-md-2" scope="col">First Name</th>
+          <th class="col-md-2" scope="col">Last Name</th>
+          <th class="col-md-2" scope="col">Email</th>
+          <th class="col-md-1" scope="col">Hotline</th>
+          <th scope="col-md-2"  class="text-center">
+            Action
+          </th>
+
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let row of employeeData |filter:data
+      | paginate
+        : {
+            itemsPerPage: tableSize,
+            currentPage: page,
+            totalItems: count
+          };
+    let i = index">
+
+          <td>{{row.id}}</td>
+          <td>{{row.FirstName}}</td>
+          <td>{{row.LastName}}</td>
+          <td>{{row.Email}}</td>
+          <td>{{row.Mobile}}</td>
+          <td class="col-md-2 text-center">
+              <button style="color: #fff;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-info" (click)="onEdit(row)">Edit</button>
+               <!--[disabled]="role==='Employee'" --> <button style="color: #fff;" class="btn btn-danger mx-3" (click)="deleteEmployeeDetail(row)">Delete</button>
+          </td>
+      </tr>
+
+  </tbody>
+
+</table>
+<div class="d-flex row text-center">
+  <pagination-controls
+    previousLabel="Prev"
+    nextLabel="Next"
+    (pageChange)="onTableDataChange($event)"
+  >
+  </pagination-controls>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Employee Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form [formGroup]="formValue" >
+                  <div class="mb-3">
+                      <label  class="form-label">First Name</label>
+                      <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" >
+                      <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                        <div *ngIf="f['firstName'].errors?.['required']">First Name is required</div>
+
+                      </div>
+                  </div>
+                  <div class="mb-3">
+                      <label class="form-label">Last Name</label>
+                      <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }">
+                      <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                        <div *ngIf="f['lastName'].errors?.['required']">Last Name is required</div>
+                      </div>
+                  </div>
+                  <div class="mb-3">
+                      <label  class="form-label">Email address</label>
+                      <input name="email" type="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"/>
+                      <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                        <div *ngIf="f['email'].errors?.['required']">Email is required</div>
+                        <div *ngIf="f['email'].errors?.['email']">Email must be a valid email address</div>
+                      </div>
+                  </div>
+                  <div class="mb-3">
+                      <label  class="form-label">Mobile Number</label>
+                      <input type="text" formControlName="mobile" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['mobile'].errors }">
+                      <div *ngIf="submitted && f['mobile'].errors" class="invalid-feedback">
+                        <div *ngIf="f['mobile'].errors?.['required']">Mobile Number is required</div>
+                        <div [hidden]="f['mobile'].errors?.['minLength']">Mobile number must have at least 10 numbers</div>
+                      </div>
+                    </div>
+
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button id="close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" *ngIf="showAdd" (click)="postEmployeeDetails()" class="btn btn-primary">Add</button>
+              <button type="button" *ngIf="showUpdate" (click)="editEmployeeDetail()" class="btn btn-primary">Update</button>
+          </div>
+      </div>
+  </div>
+</div>

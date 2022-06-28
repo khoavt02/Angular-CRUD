@@ -1,0 +1,9 @@
+.user-login{
+  color: #fff;
+  display: table-cell;
+  margin:auto 0 ;
+}
+.user-login i{
+  font-size: 32px;
+  vertical-align: middle;
+}
